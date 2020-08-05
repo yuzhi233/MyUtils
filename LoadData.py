@@ -23,7 +23,23 @@ import os
 from scipy.io  import loadmat
 import numpy as np
 import random
-from sklearn.preprocessing  import scale, StandardScaler, MinMaxScaler
+
+
+
+
+#
+
+def wgn(x, snr):
+    Ps = np.sum(abs(x)**2)/len(x)
+    Pn = Ps/(10**((snr/10)))
+    noise = np.random.randn(len(x)) * np.sqrt(Pn)
+    plt.figure(1)
+    plt.plot(noise)
+    signal_add_noise = x + noise
+    return signal_add_noise
+
+
+
 
 # 写一个自己的dataset类
 
@@ -197,7 +213,7 @@ def  data_augmentation(data_generator,win_len,train_num,test_num,stride,method='
     np.save('train_dataset',train_dataset)
     np.save('test_dataset',test_dataset)
 
-    np.save('whole_dataset',np.vstack((train_dataset,train_dataset)))#有可能有用
+    np.save('whole_dataset',np.vstack((train_dataset,test_dataset)))#有可能有用
     # return train_dataset,test_dataset
 
 
@@ -221,7 +237,7 @@ def get_dataset(path,mark,win_len,train_num,test_num,stride=110,method='0'):
 if __name__=='__main__':
     # demmo
     np.random.seed(666)
-    a,b =get_dataset('./HP0','DE',2048,400,100,200)
+    a,b =get_dataset('./HP0','DE',2048,400,100,125)
 
     #数据可视化
     import matplotlib.pyplot as plt
